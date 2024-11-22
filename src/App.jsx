@@ -107,8 +107,8 @@ function App() {
 
   if (showSuccessPage) {
     return (
-      <div className="min-h-screen bg-purple-200 flex flex-col items-center justify-center p-4">
-        <div className="bg-green-300 rounded-lg shadow-neo p-8 border-4 border-black max-w-md w-full text-center">
+      <div className="min-h-screen bg-pale-violet  flex flex-col items-center justify-center p-4">
+        <div className=" card bg-green-300  p-8 border-4 border-black max-w-md w-full text-center">
           <h1 className="text-3xl font-bold mb-4">🎉 Congratulations! 🎉</h1>
           <div class="pyro">
             <div class="before"></div>

@@ -1,4 +1,3 @@
-// CameraComponent.jsx
 import React, { useRef, useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 
 const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref) => {
@@ -40,11 +39,8 @@ const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref)
     }
   };
 
-  const downloadPhoto = () => {
-    const link = document.createElement('a');
-    link.download = `photo-${new Date().toISOString()}.png`;
-    link.href = capturedImage;
-    link.click();
+  const getBase64Image = () => {
+    return capturedImage; // This is already in base64 format
   };
 
   const retakePhoto = async () => {
@@ -64,7 +60,7 @@ const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref)
     startCamera,
     capturePhoto,
     retakePhoto,
-    downloadPhoto,
+    getBase64Image,
   }));
 
   return (

@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
-import { Camera, Download, ArrowLeft } from 'lucide-react';
+import { Camera, Check, ArrowLeft } from 'lucide-react';
 
 function App() {
   const cameraRef = useRef(null);
   const [hasCaptured, setHasCaptured] = useState(false);
+  const [base64Image, setBase64Image] = useState(null);
 
   useEffect(() => {
     cameraRef.current.startCamera();
@@ -18,10 +19,17 @@ function App() {
   const handleRetake = async () => {
     await cameraRef.current.retakePhoto();
     setHasCaptured(false);
+    setBase64Image(null);
   };
 
-  const handleDownload = () => {
-    cameraRef.current.downloadPhoto();
+  const handleValidate = () => {
+    // Get the base64 image from the camera component
+    const base64Data = cameraRef.current.getBase64Image();
+    setBase64Image(base64Data);
+    
+    // Here you can add any additional logic to handle the base64 data
+    // For example, sending it to a server or storing it locally
+    console.log('Validated and saved base64 image:', base64Data.substring(0, 50) + '...');
   };
 
   return (
@@ -48,9 +56,6 @@ function App() {
               containerClassName="relative w-full aspect-[9/21] bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"
               videoClassName="w-full h-full object-cover"
             />
-            {hasCaptured && (
-              <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-            )}
           </div>
 
           <div className="flex gap-4 my-4">
@@ -64,11 +69,11 @@ function App() {
                   Retake
                 </button>
                 <button
-                  onClick={handleDownload}
+                  onClick={handleValidate}
                   className="btn bg-green-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-green-400"
                 >
-                  <Download className="w-6 h-6 mr-2" />
-                  Save Photo
+                  <Check className="w-6 h-6 mr-2" />
+                  Validate
                 </button>
               </>
             ) : (

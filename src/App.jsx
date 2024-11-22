@@ -1,17 +1,26 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
 import { Camera, Check, ArrowLeft, Loader } from 'lucide-react';
+import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
 
 // Placeholder for model processing - replace with actual model
 const mockModelProcess = async (base64Image) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Simulate 70% success rate
-      const success = Math.random() > 0.3;
-      resolve(success);
-    }, 2000); // Simulate 2 second processing time
-  });
+  try {
+    // Initialize the model
+    const model = await initializeCLIPModel();
+
+    // Classify the image
+    const result = await classifyImage(model, base64Image, ["a photo of a person", "a photo of a bird", "a photo of a vegetable", "a photo of an iphone"]);
+    console.log(result);
+
+    // Simulate processing delay and success rate
+    return result;
+  } catch (error) {
+    console.error('Error in mockModelProcess:', error);
+    throw error;
+  }
 };
+
 
 function App() {
   const cameraRef = useRef(null);

@@ -3,6 +3,7 @@ import { pipeline } from '@xenova/transformers';
 export async function initializeCLIPModel() {
     try {
         const clipPipeline = await pipeline('zero-shot-image-classification', 'Xenova/clip-vit-base-patch32');
+        console.log("model loaded")
         return clipPipeline;
     } catch (error) {
         console.error('Error initializing CLIP model:', error);
@@ -41,3 +42,11 @@ export async function batchProcessImages(clipPipeline, imageUrls, labels) {
         throw error;
     }
 }
+
+
+document.initializeCLIPModel = initializeCLIPModel;
+document.classifyImage = classifyImage;
+document.calculateSimilarity = calculateSimilarity;
+document.batchProcessImages = batchProcessImages;
+
+

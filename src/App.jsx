@@ -3,6 +3,7 @@ import CameraComponent from './CameraComponent';
 import { Camera, Check, ArrowLeft, Loader, X } from 'lucide-react';
 import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
 
+
 const input_prompt = "Take a photo of a human"; // Configurable prompt
 
 function formatPromptForCLIP(prompt) {
@@ -151,27 +152,31 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-purple-200 flex flex-col items-center p-4 md:p-6">
-      <div className="navbar bg-green-300 rounded-lg shadow-neo mb-4 w-full border-4 border-black">
-        <div className="flex-1 text-center">
-          <a className="btn btn-ghost normal-case text-xl md:text-3xl font-bold text-black font-space">
-            Magic happens here
-          </a>
-        </div>
+    <div  className=" bg-sky-blue min-h-screen flex flex-col items-center p-4 md:p-6">
+      <div class="card-content" className="card bg-pale-red w-full border-4 border-black mb-4">
+        <h1 className="title p-3 md:p-4 text-center text-lg md:text-xl font-inter">
+          GOOZY
+        </h1>
       </div>
 
-      <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black mb-4">
-        <div className="p-3 md:p-4 text-center text-lg md:text-xl font-inter">
-          {input_prompt}
+
+    <div class="marquee bg-pale-yellow">
+        <div class="marquee-content">
+          <span>{input_prompt}</span>
+          <span> {input_prompt}</span>
+          <span> {input_prompt}</span>
+          <span> {input_prompt}</span>
+          <span> {input_prompt}</span>
         </div>
-      </div>
+    </div>
+                  
 
       <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black">
         <div className="card-body flex flex-col items-center p-0">
-          <div className="relative w-full">
+          <div class="card-thumbnail" className="relative w-full">
             <CameraComponent
               ref={cameraRef}
-              containerClassName="relative w-full h-[60vh] md:h-[70vh] bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"
+              containerClassName="relative w-full h-[60vh] md:h-[70vh] bg-black overflow-hidden border-4 border-black"
               videoClassName="w-full h-full object-contain"
             />
             {renderOverlay()}
@@ -203,11 +208,12 @@ function App() {
             ) : (
               <button
                 onClick={handleCapturePhoto}
-                className="btn bg-blue-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-blue-400"
+                className="badge bg-orange text-white items-center hover:bg-blue-400"
               >
                 <Camera className="w-6 h-6" />
               </button>
             )}
+
           </div>
         </div>
       </div>

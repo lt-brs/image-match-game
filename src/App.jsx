@@ -120,16 +120,16 @@ function App() {
   return (
     <div className="min-h-screen bg-purple-200 flex flex-col items-center p-6">
       <div className="navbar bg-green-300 rounded-lg shadow-neo mb-6 w-full border-4 border-black">
-        <div className="flex-1">
-          <a className="btn btn-ghost normal-case text-3xl font-bold text-black">
+        <div className="flex-1 text-center">
+          <a className="btn btn-ghost normal-case text-3xl font-bold text-black font-space font-bold" style={{ fontWeight: 700 }}>
             Magic happens here
           </a>
         </div>
       </div>
 
       <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black mb-4">
-        <div className="p-4 text-center text-xl font-bold">
-          Take a picture of an UHU stick
+        <div className="p-4 text-center text-xl font-inter">
+          A tired developer trying to make a camera app
         </div>
       </div>
 

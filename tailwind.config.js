@@ -14,8 +14,14 @@ export default {
           gold: '#E5A919',
           cream: '#F4E4BA',
           mint: '#9DF7E5',
-        }
-      }
+        },
+        
+      },
+      fontFamily: {
+        'space': ['Space Grotesk', 'sans-serif'],
+        'mono': ['Roboto Mono', 'monospace'],
+        'inter': ['Inter', 'sans-serif'],
+      },
     },
   },
   daisyui: {

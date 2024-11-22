@@ -7,7 +7,7 @@
         "predeploy": "npm run build",
         "deploy": "gh-pages -d dist"
     },
-    "homepage": "https://lt-brs.github.io/image-match-game",
+    "homepage": "https://lt-brs.github.io/image-match-game/",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",

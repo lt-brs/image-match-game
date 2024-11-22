@@ -110,6 +110,10 @@ function App() {
       <div className="min-h-screen bg-purple-200 flex flex-col items-center justify-center p-4">
         <div className="bg-green-300 rounded-lg shadow-neo p-8 border-4 border-black max-w-md w-full text-center">
           <h1 className="text-3xl font-bold mb-4">🎉 Congratulations! 🎉</h1>
+          <div class="pyro">
+            <div class="before"></div>
+            <div class="after"></div>
+          </div>
         </div>
       </div>
     );
@@ -133,6 +137,10 @@ function App() {
               <Check className="w-16 h-16 text-white" />
               <p className="text-white text-xl font-bold">Success!</p>
               <p className="text-white text-lg">Redirecting to success page...</p>
+              <div class="pyro">
+                <div class="before"></div>
+                <div class="after"></div>
+              </div>
             </div>
           </div>
         );
@@ -154,7 +162,7 @@ function App() {
   return (
     <div  className=" bg-sky-blue min-h-screen flex flex-col items-center p-4 md:p-6">
       <div class="card-content" className="card bg-pale-red w-full border-4 border-black mb-4">
-        <h1 className="title p-3 md:p-4 text-center text-lg md:text-xl font-inter">
+        <h1 className="title p-3 md:p-4 text-center text-lg md:text-xl font-inter text-4xl font-bold">
           GOOZY
         </h1>
       </div>
@@ -163,10 +171,10 @@ function App() {
     <div class="marquee bg-pale-yellow">
         <div class="marquee-content">
           <span>{input_prompt}</span>
-          <span> {input_prompt}</span>
-          <span> {input_prompt}</span>
-          <span> {input_prompt}</span>
-          <span> {input_prompt}</span>
+          <span>{input_prompt}</span>
+          <span>{input_prompt}</span>
+          <span>{input_prompt}</span>
+          <span>{input_prompt}</span>
         </div>
     </div>
                   

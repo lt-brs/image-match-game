@@ -3,6 +3,28 @@ import CameraComponent from './CameraComponent';
 import { Camera, Check, ArrowLeft, Loader } from 'lucide-react';
 import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
 
+
+function getBestClass(results) {
+  if (!Array.isArray(results) || results.length === 0) {
+    throw new Error('Results must be a non-empty array');
+  }
+  
+  // Initialize bestResult with the first element
+  let bestResult = results[0];
+
+  // Iterate through the results to find the one with the highest score
+  for (let i = 1; i < results.length; i++) {
+    if (results[i].score > bestResult.score) {
+      bestResult = results[i];
+    }
+  }
+
+  // Return the label of the best result
+  return bestResult.label;
+}
+
+
+
 // Placeholder for model processing - replace with actual model
 const mockModelProcess = async (base64Image) => {
   try {
@@ -13,8 +35,10 @@ const mockModelProcess = async (base64Image) => {
     const result = await classifyImage(model, base64Image, ["a photo of a person", "a photo of a bird", "a photo of a vegetable", "a photo of an iphone"]);
     console.log(result);
 
+    console.log(getBestClass(result));
+
     // Simulate processing delay and success rate
-    return result;
+    return getBestClass(result);
   } catch (error) {
     console.error('Error in mockModelProcess:', error);
     throw error;

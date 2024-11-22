@@ -627,6 +627,10 @@ video {
   width: 100%;
 }
 
+.max-w-md {
+  max-width: 28rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -728,6 +732,10 @@ video {
   padding: 1rem;
 }
 
+.p-8 {
+  padding: 2rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -738,6 +746,11 @@ video {
 
 .font-space {
   font-family: Space Grotesk, sans-serif;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-lg {

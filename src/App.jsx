@@ -1,59 +1,71 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
-import { Camera, Check, ArrowLeft, Loader } from 'lucide-react';
+import { Camera, Check, ArrowLeft, Loader, X } from 'lucide-react';
 import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
 
+const input_prompt = "Take a photo of a human"; // Configurable prompt
+
+function formatPromptForCLIP(prompt) {
+  const cleanedPrompt = prompt
+    .toLowerCase()
+    .replace(/^take\s+/, '')
+    .trim();
+  
+  return cleanedPrompt.startsWith('a photo of') 
+    ? cleanedPrompt 
+    : `a photo of ${cleanedPrompt}`;
+}
 
 function getBestClass(results) {
   if (!Array.isArray(results) || results.length === 0) {
     throw new Error('Results must be a non-empty array');
   }
   
-  // Initialize bestResult with the first element
   let bestResult = results[0];
-
-  // Iterate through the results to find the one with the highest score
+  
   for (let i = 1; i < results.length; i++) {
     if (results[i].score > bestResult.score) {
       bestResult = results[i];
     }
   }
-
-  // Return the label of the best result
+  
   return bestResult.label;
 }
 
-
-
-// Placeholder for model processing - replace with actual model
 const mockModelProcess = async (base64Image) => {
   try {
-    // Initialize the model
     const model = await initializeCLIPModel();
-
-    // Classify the image
-    const result = await classifyImage(model, base64Image, ["a photo of a person", "a photo of a bird", "a photo of a vegetable", "a photo of an iphone"]);
-    console.log(result);
-
-    console.log(getBestClass(result));
-
-    // Simulate processing delay and success rate
-    return getBestClass(result);
+    const formattedPrompt = formatPromptForCLIP(input_prompt);
+    const result = await classifyImage(model, base64Image,
+      [
+      formattedPrompt,
+      "a photo of a bird",
+      "a photo of a plane",
+      "a photo of a human"
+    ]);
+    
+    const bestClass = getBestClass(result);
+    console.log(result)
+    // Compare with formatted prompt
+    return {
+      success: bestClass === formattedPrompt,
+      bestClass
+    };
   } catch (error) {
     console.error('Error in mockModelProcess:', error);
     throw error;
   }
 };
 
-
 function App() {
   const cameraRef = useRef(null);
   const [hasCaptured, setHasCaptured] = useState(false);
   const [base64Image, setBase64Image] = useState(null);
-  const [processingState, setProcessingState] = useState('idle'); // idle, processing, success, failure
+  const [processingState, setProcessingState] = useState('idle');
+  const [showSuccessPage, setShowSuccessPage] = useState(false);
 
   useEffect(() => {
-    cameraRef.current.startCamera();
+    cameraRef.current?.startCamera();
   }, []);
 
   const handleCapturePhoto = () => {
@@ -67,6 +79,7 @@ function App() {
     setHasCaptured(false);
     setBase64Image(null);
     setProcessingState('idle');
+    setShowSuccessPage(false);
   };
 
   const handleValidate = async () => {
@@ -75,13 +88,31 @@ function App() {
     setProcessingState('processing');
     
     try {
-      const result = await mockModelProcess(base64Data);
-      setProcessingState(result ? 'success' : 'failure');
+      const { success } = await mockModelProcess(base64Data);
+      if (success) {
+        setProcessingState('success');
+        // Show success page after a brief delay
+        setTimeout(() => {
+          setShowSuccessPage(true);
+        }, 1500);
+      } else {
+        setProcessingState('failure');
+      }
     } catch (error) {
       console.error('Model processing error:', error);
       setProcessingState('failure');
     }
   };
+
+  if (showSuccessPage) {
+    return (
+      <div className="min-h-screen bg-purple-200 flex flex-col items-center justify-center p-4">
+        <div className="bg-green-300 rounded-lg shadow-neo p-8 border-4 border-black max-w-md w-full text-center">
+          <h1 className="text-3xl font-bold mb-4">🎉 Congratulations! 🎉</h1>
+        </div>
+      </div>
+    );
+  }
 
   const renderOverlay = () => {
     switch (processingState) {
@@ -100,6 +131,7 @@ function App() {
             <div className="flex flex-col items-center gap-4">
               <Check className="w-16 h-16 text-white" />
               <p className="text-white text-xl font-bold">Success!</p>
+              <p className="text-white text-lg">Redirecting to success page...</p>
             </div>
           </div>
         );
@@ -108,7 +140,8 @@ function App() {
           <div className="absolute inset-0 flex items-center justify-center bg-red-500/80">
             <div className="flex flex-col items-center gap-4">
               <X className="w-16 h-16 text-white" />
-              <p className="text-white text-xl font-bold">Failed!</p>
+              <p className="text-white text-xl font-bold">Not quite right!</p>
+              <p className="text-white text-lg">Please try taking another photo</p>
             </div>
           </div>
         );
@@ -129,7 +162,7 @@ function App() {
 
       <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black mb-4">
         <div className="p-3 md:p-4 text-center text-lg md:text-xl font-inter">
-          A tired developer trying to make a camera app
+          {input_prompt}
         </div>
       </div>
 
@@ -147,14 +180,16 @@ function App() {
           <div className="flex gap-4 my-4">
             {hasCaptured ? (
               <>
-                <button
-                  onClick={handleRetake}
-                  className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
-                  disabled={processingState === 'processing'}
-                >
-                  <ArrowLeft className="w-6 h-6 mr-2" />
-                  Retake
-                </button>
+                {/* Show retake button in idle or failure states */}
+                {(processingState === 'idle' || processingState === 'failure') && (
+                  <button
+                    onClick={handleRetake}
+                    className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
+                  >
+                    <ArrowLeft className="w-6 h-6 mr-2" />
+                    Retake
+                  </button>
+                )}
                 {processingState === 'idle' && (
                   <button
                     onClick={handleValidate}

@@ -36,11 +36,16 @@ const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref)
       context.drawImage(video, 0, 0);
       const imgUrl = canvas.toDataURL('image/png');
       setCapturedImage(imgUrl);
+      
+      // Stop the camera stream after capturing
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
     }
   };
 
   const getBase64Image = () => {
-    return capturedImage; // This is already in base64 format
+    return capturedImage;
   };
 
   const retakePhoto = async () => {

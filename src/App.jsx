@@ -1,10 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
-import { Camera, Check, ArrowLeft, Loader, X } from 'lucide-react';
+import { Camera, Check, ArrowLeft, Loader, X, Trophy } from 'lucide-react';
 import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
 
-
-const input_prompt = "Take a photo of a human"; // Configurable prompt
+const input_prompt = "Take a photo of a human";
 
 function formatPromptForCLIP(prompt) {
   const cleanedPrompt = prompt
@@ -42,12 +41,11 @@ const mockModelProcess = async (base64Image) => {
       formattedPrompt,
       "a photo of a bird",
       "a photo of a plane",
-      "a photo of a human"
+      "a photo of a cat"
     ]);
     
     const bestClass = getBestClass(result);
     console.log(result)
-    // Compare with formatted prompt
     return {
       success: bestClass === formattedPrompt,
       bestClass
@@ -64,10 +62,38 @@ function App() {
   const [base64Image, setBase64Image] = useState(null);
   const [processingState, setProcessingState] = useState('idle');
   const [showSuccessPage, setShowSuccessPage] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [streakCount, setStreakCount] = useState(0);
+
+  const StreakCounter = ({ count }) => (
+    <div className="w-full max-w-md bg-orange-300 rounded-lg border-4 border-black p-3 shadow-neo mb-4 flex items-center justify-center gap-2">
+      <Trophy className="w-6 h-6 text-black" />
+      <span className="text-xl font-bold">{count} Streak</span>
+    </div>
+  );
 
   useEffect(() => {
-    cameraRef.current?.startCamera();
-  }, []);
+    const initCamera = async () => {
+      setIsLoading(true);
+      try {
+        await cameraRef.current?.startCamera();
+      } catch (error) {
+        console.error('Failed to initialize camera:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (!showSuccessPage) {
+      initCamera();
+    }
+
+    return () => {
+      if (cameraRef.current) {
+        cameraRef.current.cleanup?.();
+      }
+    };
+  }, [showSuccessPage]);
 
   const handleCapturePhoto = () => {
     cameraRef.current.capturePhoto();
@@ -76,11 +102,40 @@ function App() {
   };
 
   const handleRetake = async () => {
-    await cameraRef.current.retakePhoto();
+    setIsLoading(true);
+    try {
+      await cameraRef.current.retakePhoto();
+      setHasCaptured(false);
+      setBase64Image(null);
+      setProcessingState('idle');
+      setShowSuccessPage(false);
+    } catch (error) {
+      console.error('Error retaking photo:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleShare = () => {
+    console.log('Share clicked');
+  };
+
+  const handleHome = async () => {
+    setShowSuccessPage(false);
     setHasCaptured(false);
     setBase64Image(null);
     setProcessingState('idle');
-    setShowSuccessPage(false);
+    setIsLoading(true);
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    try {
+      await cameraRef.current?.startCamera();
+    } catch (error) {
+      console.error('Failed to initialize camera:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleValidate = async () => {
@@ -92,7 +147,7 @@ function App() {
       const { success } = await mockModelProcess(base64Data);
       if (success) {
         setProcessingState('success');
-        // Show success page after a brief delay
+        setStreakCount(prevCount => prevCount + 1);
         setTimeout(() => {
           setShowSuccessPage(true);
         }, 1500);
@@ -105,21 +160,18 @@ function App() {
     }
   };
 
-  if (showSuccessPage) {
-    return (
-      <div className="min-h-screen bg-pale-violet  flex flex-col items-center justify-center p-4">
-        <div className=" card bg-green-300  p-8 border-4 border-black max-w-md w-full text-center">
-          <h1 className="text-3xl font-bold mb-4 goozy">🎉 Congratulations! 🎉</h1>
-          <div class="pyro">
-            <div class="before"></div>
-            <div class="after"></div>
+  const renderOverlay = () => {
+    if (isLoading) {
+      return (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+          <div className="flex flex-col items-center gap-4">
+            <Loader className="w-12 h-12 text-white animate-spin" />
+            <p className="text-white text-xl font-bold">Starting camera...</p>
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  const renderOverlay = () => {
     switch (processingState) {
       case 'processing':
         return (
@@ -137,9 +189,9 @@ function App() {
               <Check className="w-16 h-16 text-white" />
               <p className="text-white text-xl font-bold">Success!</p>
               <p className="text-white text-lg">Redirecting to success page...</p>
-              <div class="pyro">
-                <div class="before"></div>
-                <div class="after"></div>
+              <div className="pyro">
+                <div className="before"></div>
+                <div className="after"></div>
               </div>
             </div>
           </div>
@@ -159,68 +211,112 @@ function App() {
     }
   };
 
-  return (
-    <div  className=" bg-sky-blue min-h-screen flex flex-col items-center p-4 md:p-6">
-      <div class="card-content" className="card bg-pale-red w-full border-4 border-black mb-4" style={{ transform: 'skewY(-2.5deg)' }}>
-        <h1 className="title p-3 md:p-4 text-center text-lg md:text-xl font-inter text-4xl font-bold" >
-          GOOZY
-        </h1>
-      </div>
-
-    <div class="marquee bg-pale-yellow p-2" style={{ transform: 'skewX(7deg)', marginTop: "1rem" }}>
-        <div class="marquee-content">
-          <span>{input_prompt}</span>
-          <span>{input_prompt}</span>
-          <span>{input_prompt}</span>
-          <span>{input_prompt}</span>
-          <span>{input_prompt}</span>
-        </div>
-    </div>
-                  
-
-      <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black">
-        <div className="card-body flex flex-col items-center p-0" >
-          <div class="card-thumbnail" className="relative w-full" >
-            <CameraComponent
-              ref={cameraRef}
-              containerClassName="relative w-full h-[55vh] md:h-[70vh] bg-black overflow-hidden border-4 border-black"
-              videoClassName="w-full h-full object-contain"
-            />
-            {renderOverlay()}
+  if (showSuccessPage) {
+    return (
+      <div className="min-h-screen bg-pale-violet flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md flex flex-col items-center gap-4">
+          <StreakCounter count={streakCount} />
+          <div className="bg-green-300 p-8 border-4 border-black w-full rounded-lg">
+            <div className="flex flex-col items-center gap-8">
+              <h1 className="text-3xl font-bold text-center">
+                🔥 Keep it up 🔥
+              </h1>
+              
+              <div className="flex justify-between w-full gap-4">
+                <button
+                  onClick={handleHome}
+                  className="btn bg-orange-300 border-4 border-black text-black shadow-neo flex-1 py-3 text-lg font-bold hover:bg-orange-400"
+                >
+                  Home
+                </button>
+                <button
+                  onClick={handleShare}
+                  className="btn bg-blue-300 border-4 border-black text-black shadow-neo flex-1 py-3 text-lg font-bold hover:bg-blue-400"
+                >
+                  Share
+                </button>
+              </div>
+            </div>
           </div>
+        </div>
+        <div className="pyro">
+          <div className="before"></div>
+          <div className="after"></div>
+        </div>
+      </div>
+    );
+  }
 
-          <div className="flex gap-4 my-4">
-            {hasCaptured ? (
-              <>
-                {/* Show retake button in idle or failure states */}
-                {(processingState === 'idle' || processingState === 'failure') && (
-                  <button
-                    onClick={handleRetake}
-                    className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
-                  >
-                    <ArrowLeft className="w-6 h-6 mr-2" />
-                    Retake
-                  </button>
-                )}
-                {processingState === 'idle' && (
-                  <button
-                    onClick={handleValidate}
-                    className="btn bg-green-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-green-400"
-                  >
-                    <Check className="w-6 h-6 mr-2" />
-                    Validate
-                  </button>
-                )}
-              </>
-            ) : (
-              <button
-                onClick={handleCapturePhoto}
-                className="badge bg-orange text-white items-center hover:bg-blue-400"
-              >
-                <Camera className="w-6 h-6"/>
-              </button>
-            )}
+  return (
+    <div className="bg-sky-blue min-h-screen flex flex-col items-center p-4 md:p-6">
+      <div className="w-full max-w-md flex flex-col items-center gap-4">
+        <div 
+          className="card bg-pale-red w-full border-4 border-black" 
+          style={{ transform: 'skewY(-2.5deg)' }}
+        >
+          <h1 className="title p-3 md:p-4 text-center text-4xl font-bold">
+            GOOZY
+          </h1>
+        </div>
 
+        <div 
+          className="marquee bg-pale-yellow w-full p-2" 
+          style={{ transform: 'skewX(7deg)', marginTop: "1rem" }}
+        >
+          <div className="marquee-content">
+            <span>{input_prompt}</span>
+            <span>{input_prompt}</span>
+            <span>{input_prompt}</span>
+            <span>{input_prompt}</span>
+            <span>{input_prompt}</span>
+          </div>
+        </div>
+
+        <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black">
+          <div className="card-body flex flex-col items-center p-0">
+            <div className="relative w-full">
+              <CameraComponent
+                ref={cameraRef}
+                containerClassName="relative w-full h-[55vh] md:h-[70vh] bg-black overflow-hidden border-4 border-black"
+                videoClassName="w-full h-full object-contain"
+              />
+              {renderOverlay()}
+            </div>
+
+            <div className="flex gap-4 my-4">
+              {hasCaptured ? (
+                <>
+                  {(processingState === 'idle' || processingState === 'failure') && (
+                    <button
+                      onClick={handleRetake}
+                      className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
+                    >
+                      <ArrowLeft className="w-6 h-6 mr-2" />
+                      Retake
+                    </button>
+                  )}
+                  {processingState === 'idle' && (
+                    <button
+                      onClick={handleValidate}
+                      className="btn bg-green-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-green-400"
+                    >
+                      <Check className="w-6 h-6 mr-2" />
+                      Validate
+                    </button>
+                  )}
+                </>
+              ) : (
+                <button
+                  onClick={handleCapturePhoto}
+                  disabled={isLoading}
+                  className={`badge bg-orange text-white items-center ${
+                    isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-400'
+                  }`}
+                >
+                  <Camera className="w-6 h-6" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -229,5 +325,3 @@ function App() {
 }
 
 export default App;
-
-

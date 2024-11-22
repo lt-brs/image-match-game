@@ -27,7 +27,7 @@ function App() {
       <div className="navbar bg-green-300 rounded-lg shadow-neo mb-6 w-full max-w-4xl border-4 border-black">
         <div className="flex-1">
           <a className="btn btn-ghost normal-case text-3xl font-bold text-black">
-            Camera App
+            Magic happens here
           </a>
         </div>
       </div>
@@ -35,9 +35,6 @@ function App() {
       {/* Camera Card */}
       <div className="card bg-green-300 rounded-lg shadow-neo w-full max-w-4xl border-4 border-black">
         <div className="card-body flex flex-col items-center">
-          <h2 className="card-title text-2xl font-bold text-black mb-4">
-            Camera
-          </h2>
           <CameraComponent
             ref={cameraRef}
             containerClassName="relative w-full max-w-2xl aspect-video bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"

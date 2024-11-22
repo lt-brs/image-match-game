@@ -118,17 +118,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-purple-200 flex flex-col items-center p-6">
-      <div className="navbar bg-green-300 rounded-lg shadow-neo mb-6 w-full border-4 border-black">
+    <div className="min-h-screen bg-purple-200 flex flex-col items-center p-4 md:p-6">
+      <div className="navbar bg-green-300 rounded-lg shadow-neo mb-4 w-full border-4 border-black">
         <div className="flex-1 text-center">
-          <a className="btn btn-ghost normal-case text-3xl font-bold text-black font-space font-bold" style={{ fontWeight: 700 }}>
+          <a className="btn btn-ghost normal-case text-xl md:text-3xl font-bold text-black font-space">
             Magic happens here
           </a>
         </div>
       </div>
 
       <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black mb-4">
-        <div className="p-4 text-center text-xl font-inter">
+        <div className="p-3 md:p-4 text-center text-lg md:text-xl font-inter">
           A tired developer trying to make a camera app
         </div>
       </div>
@@ -138,8 +138,8 @@ function App() {
           <div className="relative w-full">
             <CameraComponent
               ref={cameraRef}
-              containerClassName="relative w-full aspect-[9/21] bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"
-              videoClassName="w-full h-full object-cover"
+              containerClassName="relative w-full h-[60vh] md:h-[70vh] bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"
+              videoClassName="w-full h-full object-contain"
             />
             {renderOverlay()}
           </div>

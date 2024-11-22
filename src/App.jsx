@@ -109,7 +109,7 @@ function App() {
     return (
       <div className="min-h-screen bg-pale-violet  flex flex-col items-center justify-center p-4">
         <div className=" card bg-green-300  p-8 border-4 border-black max-w-md w-full text-center">
-          <h1 className="text-3xl font-bold mb-4">🎉 Congratulations! 🎉</h1>
+          <h1 className="text-3xl font-bold mb-4 goozy">🎉 Congratulations! 🎉</h1>
           <div class="pyro">
             <div class="before"></div>
             <div class="after"></div>
@@ -161,14 +161,13 @@ function App() {
 
   return (
     <div  className=" bg-sky-blue min-h-screen flex flex-col items-center p-4 md:p-6">
-      <div class="card-content" className="card bg-pale-red w-full border-4 border-black mb-4">
-        <h1 className="title p-3 md:p-4 text-center text-lg md:text-xl font-inter text-4xl font-bold">
+      <div class="card-content" className="card bg-pale-red w-full border-4 border-black mb-4" style={{ transform: 'skewY(-2.5deg)' }}>
+        <h1 className="title p-3 md:p-4 text-center text-lg md:text-xl font-inter text-4xl font-bold" >
           GOOZY
         </h1>
       </div>
 
-
-    <div class="marquee bg-pale-yellow">
+    <div class="marquee bg-pale-yellow p-2" style={{ transform: 'skewX(7deg)', marginTop: "1rem" }}>
         <div class="marquee-content">
           <span>{input_prompt}</span>
           <span>{input_prompt}</span>
@@ -180,11 +179,11 @@ function App() {
                   
 
       <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black">
-        <div className="card-body flex flex-col items-center p-0">
-          <div class="card-thumbnail" className="relative w-full">
+        <div className="card-body flex flex-col items-center p-0" >
+          <div class="card-thumbnail" className="relative w-full" >
             <CameraComponent
               ref={cameraRef}
-              containerClassName="relative w-full h-[60vh] md:h-[70vh] bg-black overflow-hidden border-4 border-black"
+              containerClassName="relative w-full h-[55vh] md:h-[70vh] bg-black overflow-hidden border-4 border-black"
               videoClassName="w-full h-full object-contain"
             />
             {renderOverlay()}
@@ -218,7 +217,7 @@ function App() {
                 onClick={handleCapturePhoto}
                 className="badge bg-orange text-white items-center hover:bg-blue-400"
               >
-                <Camera className="w-6 h-6" />
+                <Camera className="w-6 h-6"/>
               </button>
             )}
 
@@ -230,3 +229,5 @@ function App() {
 }
 
 export default App;
+
+

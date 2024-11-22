@@ -1,23 +1,14 @@
-// src/App.jsx
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
-import { Camera, Download, X } from 'lucide-react';
+import { Camera, Download, ArrowLeft } from 'lucide-react';
 
 function App() {
   const cameraRef = useRef(null);
-  const [isStreaming, setIsStreaming] = useState(false);
   const [hasCaptured, setHasCaptured] = useState(false);
 
-  const handleStartCamera = async () => {
-    await cameraRef.current.startCamera();
-    setIsStreaming(true);
-  };
-
-  const handleStopCamera = () => {
-    cameraRef.current.stopCamera();
-    setIsStreaming(false);
-    setHasCaptured(false);
-  };
+  useEffect(() => {
+    cameraRef.current.startCamera();
+  }, []);
 
   const handleCapturePhoto = () => {
     cameraRef.current.capturePhoto();
@@ -35,7 +26,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-purple-200 flex flex-col items-center p-6">
-      <div className="navbar bg-green-300 rounded-lg shadow-neo mb-6 w-full max-w-4xl border-4 border-black">
+      <div className="navbar bg-green-300 rounded-lg shadow-neo mb-6 w-full border-4 border-black">
         <div className="flex-1">
           <a className="btn btn-ghost normal-case text-3xl font-bold text-black">
             Magic happens here
@@ -43,24 +34,35 @@ function App() {
         </div>
       </div>
 
-      <div className="card bg-green-300 rounded-lg shadow-neo w-full max-w-4xl border-4 border-black">
-        <div className="card-body flex flex-col items-center">
-          <CameraComponent
-            ref={cameraRef}
-            containerClassName="relative w-full max-w-2xl aspect-video bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"
-            videoClassName="w-full h-full object-cover"
-          />
+      <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black mb-4">
+        <div className="p-4 text-center text-xl font-bold">
+          Take a picture of an UHU stick
+        </div>
+      </div>
 
-          <div className="flex gap-4 mt-6">
-            {!isStreaming ? (
-              <button
-                onClick={handleStartCamera}
-                className="btn btn-primary bg-yellow-300 border-4 border-black text-black shadow-neo hover:bg-yellow-400"
-              >
-                Start Camera
-              </button>
-            ) : hasCaptured ? (
+      <div className="card bg-green-300 rounded-lg shadow-neo w-full border-4 border-black">
+        <div className="card-body flex flex-col items-center p-0">
+          <div className="relative w-full">
+            <CameraComponent
+              ref={cameraRef}
+              containerClassName="relative w-full aspect-[9/21] bg-black rounded-lg overflow-hidden border-4 border-black shadow-neo"
+              videoClassName="w-full h-full object-cover"
+            />
+            {hasCaptured && (
+              <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+            )}
+          </div>
+
+          <div className="flex gap-4 my-4">
+            {hasCaptured ? (
               <>
+                <button
+                  onClick={handleRetake}
+                  className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
+                >
+                  <ArrowLeft className="w-6 h-6 mr-2" />
+                  Retake
+                </button>
                 <button
                   onClick={handleDownload}
                   className="btn bg-green-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-green-400"
@@ -68,30 +70,14 @@ function App() {
                   <Download className="w-6 h-6 mr-2" />
                   Save Photo
                 </button>
-                <button
-                  onClick={handleRetake}
-                  className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
-                >
-                  <X className="w-6 h-6 mr-2" />
-                  Retake
-                </button>
               </>
             ) : (
-              <>
-                <button
-                  onClick={handleCapturePhoto}
-                  className="btn bg-blue-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-blue-400"
-                >
-                  <Camera className="w-6 h-6 mr-2" />
-                  Take Photo
-                </button>
-                <button
-                  onClick={handleStopCamera}
-                  className="btn bg-red-300 border-4 border-black text-black shadow-neo hover:bg-red-400"
-                >
-                  Stop Camera
-                </button>
-              </>
+              <button
+                onClick={handleCapturePhoto}
+                className="btn bg-blue-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-blue-400"
+              >
+                <Camera className="w-6 h-6" />
+              </button>
             )}
           </div>
         </div>

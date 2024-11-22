@@ -1,6 +1,5 @@
-// src/CameraComponent.jsx
+// CameraComponent.jsx
 import React, { useRef, useState, forwardRef, useImperativeHandle, useEffect } from 'react';
-import { Camera, Download, X } from 'lucide-react';
 
 const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref) => {
   const videoRef = useRef(null);
@@ -14,7 +13,7 @@ const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref)
         video: {
           facingMode: 'environment',
           width: { ideal: 640 },
-          height: { ideal: 360 },
+          height: { ideal: 660 },
         },
       });
 
@@ -25,17 +24,6 @@ const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref)
     } catch (err) {
       console.error('Error accessing camera:', err);
       alert("Error accessing camera. Please ensure you've granted camera permissions.");
-    }
-  };
-
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
-      setCapturedImage(null);
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
     }
   };
 
@@ -74,7 +62,6 @@ const CameraComponent = forwardRef(({ containerClassName, videoClassName }, ref)
 
   useImperativeHandle(ref, () => ({
     startCamera,
-    stopCamera,
     capturePhoto,
     retakePhoto,
     downloadPhoto,

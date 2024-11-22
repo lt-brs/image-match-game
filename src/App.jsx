@@ -42,7 +42,7 @@ function App() {
           </a>
         </div>
       </div>
-
+      
       <div className="card bg-green-300 rounded-lg shadow-neo w-full max-w-4xl border-4 border-black">
         <div className="card-body flex flex-col items-center">
           <CameraComponent

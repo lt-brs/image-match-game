@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react';
 import CameraComponent from './CameraComponent';
 import { Camera, Download, X } from 'lucide-react';
+import { initializeCLIPModel, classifyImage, calculateSimilarity, batchProcessImages } from './CLIP';
 
 function App() {
   const cameraRef = useRef(null);
@@ -90,6 +91,14 @@ function App() {
                   className="btn bg-red-300 border-4 border-black text-black shadow-neo hover:bg-red-400"
                 >
                   Stop Camera
+                </button>
+
+
+                <button
+                  onClick={initializeCLIPModel}
+                  className="btn bg-red-300 border-4 border-black text-black shadow-neo hover:bg-red-400"
+                >
+                 Load Model              
                 </button>
               </>
             )}

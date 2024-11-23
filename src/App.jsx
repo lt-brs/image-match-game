@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
-import { Camera, Check, ArrowLeft, Loader, X, Trophy } from 'lucide-react';
+import { Camera, Check, IterationCw, Loader, X, Trophy } from 'lucide-react';
 import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
 
 const input_prompt = "Take a photo of a human";
@@ -66,7 +66,7 @@ function App() {
   const [streakCount, setStreakCount] = useState(0);
 
   const StreakCounter = ({ count }) => (
-    <div className="w-full max-w-md bg-orange-300 rounded-lg border-4 border-black p-3 shadow-neo mb-4 flex items-center justify-center gap-2">
+    <div className="w-full max-w-md bg-orange-300 rounded-lg border-4 border-black p-3 shadow-neo mb-4 flex items-center justify-center gap-2  bg-pale-yellow card">
       <Trophy className="w-6 h-6 text-black" />
       <span className="text-xl font-bold">{count} Streak</span>
     </div>
@@ -118,6 +118,7 @@ function App() {
 
   const handleShare = () => {
     console.log('Share clicked');
+    alert("todo")
   };
 
   const handleHome = async () => {
@@ -216,24 +217,27 @@ function App() {
       <div className="min-h-screen bg-pale-violet flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-md flex flex-col items-center gap-4">
           <StreakCounter count={streakCount} />
-          <div className="bg-green-300 p-8 border-4 border-black w-full rounded-lg">
+          <div className="bg-green-300 p-8 border-4 border-black w-full rounded-lg card">
             <div className="flex flex-col items-center gap-8">
               <h1 className="text-3xl font-bold text-center">
                 🔥 Keep it up 🔥
               </h1>
               
+              <img src={base64Image} className="mb-4">
+              </img>
+
               <div className="flex justify-between w-full gap-4">
                 <button
                   onClick={handleHome}
-                  className="btn bg-orange-300 border-4 border-black text-black shadow-neo flex-1 py-3 text-lg font-bold hover:bg-orange-400"
+                  className="btn bg-orange-300  text-black  flex-1  font-bold hover:bg-orange-399"
                 >
-                  Home
+                  EXIT
                 </button>
                 <button
                   onClick={handleShare}
-                  className="btn bg-blue-300 border-4 border-black text-black shadow-neo flex-1 py-3 text-lg font-bold hover:bg-blue-400"
+                  className="btn bg-blue-300 border-4 border-black text-black shadow-neo flex-1 py-3 text-lg font-bold hover:bg-blue-400 badge"
                 >
-                  Share
+                  Share & See
                 </button>
               </div>
             </div>
@@ -289,18 +293,19 @@ function App() {
                   {(processingState === 'idle' || processingState === 'failure') && (
                     <button
                       onClick={handleRetake}
-                      className="btn bg-red-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
+                      className="btn bg-pale-violet border-4 border-black text-black shadow-neo flex items-center hover:bg-red-400"
                     >
-                      <ArrowLeft className="w-6 h-6 mr-2" />
-                      Retake
+                      <IterationCw className="w-6 h-3 m-8" />
+                      
                     </button>
+                    //Retake
                   )}
                   {processingState === 'idle' && (
                     <button
                       onClick={handleValidate}
-                      className="btn bg-green-300 border-4 border-black text-black shadow-neo flex items-center hover:bg-green-400"
+                      className="btn bg-soft-blue border-4 border-black text-black shadow-neo flex items-center hover:bg-green-400 badge"
                     >
-                      <Check className="w-6 h-6 mr-2" />
+                      <Check className="w-6 h-6 m-" />
                       Validate
                     </button>
                   )}

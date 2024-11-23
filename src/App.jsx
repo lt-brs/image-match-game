@@ -1,7 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import CameraComponent from './CameraComponent';
-import { Camera, Check, IterationCw, Loader, X, Trophy } from 'lucide-react';
+import { Camera, Check, ArrowLeft, Loader, X, Trophy, Users, ArrowLeftCircle, IterationCw } from 'lucide-react';
 import { initializeCLIPModel, classifyImage } from './CLIP.mjs';
+
+import image1 from './pics/image1.png';
+import image2 from './pics/image2.png';
+import image3 from './pics/image3.png';
+import image4 from './pics/image4.png';
 
 const input_prompt = "Take a photo of a human";
 
@@ -62,8 +67,17 @@ function App() {
   const [base64Image, setBase64Image] = useState(null);
   const [processingState, setProcessingState] = useState('idle');
   const [showSuccessPage, setShowSuccessPage] = useState(false);
+  const [showSocialPage, setShowSocialPage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [streakCount, setStreakCount] = useState(0);
+
+  // Updated friendsData with actual images
+  const friendsData = [
+    { id: 1, name: "Sarah", streak: 15, timestamp: "2 hours ago", image: image1 },
+    { id: 2, name: "Mike", streak: 8, timestamp: "4 hours ago", image: image2 },
+    { id: 3, name: "Emma", streak: 12, timestamp: "5 hours ago", image: image3 },
+    { id: 4, name: "John", streak: 20, timestamp: "6 hours ago", image: image4 }
+  ];
 
   const StreakCounter = ({ count }) => (
     <div className="w-full max-w-md bg-orange-300 rounded-lg border-4 border-black p-3 shadow-neo mb-4 flex items-center justify-center gap-2  bg-pale-yellow card">
@@ -84,7 +98,7 @@ function App() {
       }
     };
 
-    if (!showSuccessPage) {
+    if (!showSuccessPage && !showSocialPage) {
       initCamera();
     }
 
@@ -93,7 +107,7 @@ function App() {
         cameraRef.current.cleanup?.();
       }
     };
-  }, [showSuccessPage]);
+  }, [showSuccessPage, showSocialPage]);
 
   const handleCapturePhoto = () => {
     cameraRef.current.capturePhoto();
@@ -109,6 +123,7 @@ function App() {
       setBase64Image(null);
       setProcessingState('idle');
       setShowSuccessPage(false);
+      setShowSocialPage(false);
     } catch (error) {
       console.error('Error retaking photo:', error);
     } finally {
@@ -117,12 +132,16 @@ function App() {
   };
 
   const handleShare = () => {
-    console.log('Share clicked');
-    alert("todo")
+    setShowSocialPage(true);
+  };
+
+  const handleBack = () => {
+    setShowSocialPage(false);
   };
 
   const handleHome = async () => {
     setShowSuccessPage(false);
+    setShowSocialPage(false);
     setHasCaptured(false);
     setBase64Image(null);
     setProcessingState('idle');
@@ -212,6 +231,57 @@ function App() {
     }
   };
 
+if (showSocialPage) {
+  return (
+    <div className="min-h-screen bg-pale-violet flex flex-col items-center p-4">
+      <div className="w-full max-w-md flex flex-col items-center gap-4">
+        <div className="w-full flex items-center justify-center mb-4">
+          <h2 className="text-2xl font-bold">Friends' Photos</h2>
+        </div>
+
+        <div className="w-full bg-white border-4 border-black rounded-lg p-4 mb-4">
+          <h3 className="text-xl font-bold mb-2">Today's Prompt:</h3>
+          <p className="text-lg">{input_prompt}</p>
+        </div>
+
+        <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[60vh] p-2">
+          {friendsData.map(friend => (
+            <div key={friend.id} className="bg-green-300 border-4 border-black rounded-lg p-4 shadow-neo">
+              <div className="flex flex-col">
+                <div className="w-full mb-3">
+                  <img
+                    src={friend.image}
+                    alt={`${friend.name}'s photo`}
+                    className="w-full h-48 object-cover rounded-lg border-2 border-black"
+                  />
+                </div>
+                {/* Replace this div and its contents */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-lg">{friend.name}</span>
+                    <span className="text-sm text-gray-600">• {friend.timestamp}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-5 h-5" />
+                    <span className="font-bold text-lg">{friend.streak}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={handleHome}
+          className="btn bg-blue-300 border-4 border-black text-black shadow-neo w-full py-3 mt-4 text-lg font-bold hover:bg-blue-400"
+        >
+          Back to Home
+        </button>
+      </div>
+    </div>
+  );
+}
+  
   if (showSuccessPage) {
     return (
       <div className="min-h-screen bg-pale-violet flex flex-col items-center justify-center p-4">
@@ -225,7 +295,7 @@ function App() {
               
               <img src={base64Image} className="mb-4">
               </img>
-
+              
               <div className="flex justify-between w-full gap-4">
                 <button
                   onClick={handleHome}

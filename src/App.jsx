@@ -89,10 +89,14 @@ const mockModelProcess = async (base64Image) => {
      
       [
         formattedPrompt,
-        "a photo of an animal",
-        "a photo of foood",
-        "a photo of a chair",
-        "a photo of a vegetable",
+        'a photo of an animal', 
+        'a photo of food',
+        'a photo of a person',
+        'a photo of a building',
+        'a photo of a vehicule',
+        'a photo of art',
+        'a photo of a sport',
+        'a photo of technology',
       ]
       
     );

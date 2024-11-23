@@ -9,7 +9,7 @@ import image3 from './pics/image3.png';
 import image4 from './pics/image4.png';
 
 
-const input_prompt = "Take a photo of a your pretty face";
+const input_prompt = "Take a photo of your pretty face";
 
 
 function  generateSmartContrasts(originalPrompt,  numContrasts  =  3)  {

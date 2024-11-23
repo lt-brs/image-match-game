@@ -124,10 +124,10 @@ function App() {
   // Updated friendsData with dynamic user photo
   const getFriendsData = () => {
     const baseData = [
-      { id: 1, name: "Sarah", streak: 15, timestamp: "2 hours ago", image: image1 },
-      { id: 2, name: "Mike", streak: 8, timestamp: "4 hours ago", image: image2 },
-      { id: 3, name: "Emma", streak: 12, timestamp: "5 hours ago", image: image3 },
-      { id: 4, name: "John", streak: 20, timestamp: "6 hours ago", image: image4 }
+      { id: 1, name: "Olivier", streak: 15, timestamp: "2 hours ago", image: image1 },
+      { id: 2, name: "Saber", streak: 8, timestamp: "4 hours ago", image: image2 },
+      { id: 3, name: "Hasnaa", streak: 12, timestamp: "5 hours ago", image: image3 },
+      { id: 4, name: "Yann", streak: 20, timestamp: "6 hours ago", image: image4 }
     ];
 
     // Add user's photo if available
@@ -467,6 +467,7 @@ function App() {
                 <button
                   onClick={handleCapturePhoto}
                   disabled={isLoading}
+                  style = {{ left: '50%', transform: 'scale(2.0)', }}
                   className={`badge bg-orange text-white items-center ${
                     isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-400'
                   }`}

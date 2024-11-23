@@ -293,9 +293,13 @@ function App() {
               </div>
             ))}
           </div>
+          <div className="h-96"></div>
+          <div className="h-96"></div>
+          <div className="h-96"></div>
+          <div className="h-96"></div>
 
 
-    <div style={{position: "fixed", bottom: "0", width: "100%"}} className='bg-orange p-4'>
+    <div style={{position: "fixed", bottom: "0", width: "100%", display: "flex", justifyContent: "center"}} className='bg-orange p-4'>
         <button
           onClick={handleHome}
           className="btn bg-blue-300 border-4 border-black text-black shadow-neo w-full py-3 mt-4 text-lg font-bold hover:bg-blue-400 badge m-4"
@@ -359,7 +363,7 @@ function App() {
           style={{ transform: 'skewY(-2.5deg)' }}
         >
           <h1 className="title p-3 md:p-4 text-center text-4xl font-bold">
-            SPOTON
+            SpotOn
           </h1>
         </div>
 
@@ -398,7 +402,6 @@ function App() {
                       <IterationCw className="w-6 h-3 m-8" />
                       
                     </button>
-                    //Retake
                   )}
                   {processingState === 'idle' && (
                     <button

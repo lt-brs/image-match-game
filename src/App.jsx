@@ -274,12 +274,16 @@ if (showSocialPage) {
           ))}
         </div>
 
+    <div style={{position: "fixed", bottom: "0", width: "100%"}} className='bg-orange p-4'>
         <button
           onClick={handleHome}
-          className="btn bg-blue-300 border-4 border-black text-black shadow-neo w-full py-3 mt-4 text-lg font-bold hover:bg-blue-400"
+          className="btn bg-blue-300 border-4 border-black text-black shadow-neo w-full py-3 mt-4 text-lg font-bold hover:bg-blue-400 badge m-4"
+          style={{maxWidth: "70vw", bottom: "4vh",}}
         >
           Back to Home
         </button>
+  </div>
+        
       </div>
     </div>
   );

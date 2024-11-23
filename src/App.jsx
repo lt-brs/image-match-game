@@ -71,13 +71,34 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [streakCount, setStreakCount] = useState(0);
 
-  // Updated friendsData with actual images
-  const friendsData = [
-    { id: 1, name: "Sarah", streak: 15, timestamp: "2 hours ago", image: image1 },
-    { id: 2, name: "Mike", streak: 8, timestamp: "4 hours ago", image: image2 },
-    { id: 3, name: "Emma", streak: 12, timestamp: "5 hours ago", image: image3 },
-    { id: 4, name: "John", streak: 20, timestamp: "6 hours ago", image: image4 }
-  ];
+  // Updated friendsData with dynamic user photo
+  const getFriendsData = () => {
+    const baseData = [
+      { id: 1, name: "Sarah", streak: 15, timestamp: "2 hours ago", image: image1 },
+      { id: 2, name: "Mike", streak: 8, timestamp: "4 hours ago", image: image2 },
+      { id: 3, name: "Emma", streak: 12, timestamp: "5 hours ago", image: image3 },
+      { id: 4, name: "John", streak: 20, timestamp: "6 hours ago", image: image4 }
+    ];
+
+    // Add user's photo if available
+    if (base64Image) {
+      const userPhoto = {
+        id: 0,
+        name: "You",
+        streak: streakCount,
+        timestamp: "Just now",
+        image: base64Image
+      };
+      return [...baseData, userPhoto];
+    }
+
+    return baseData;
+  };
+
+  // Sort friends by streak count
+  const getSortedFriends = () => {
+    return getFriendsData().sort((a, b) => b.streak - a.streak);
+  };
 
   const StreakCounter = ({ count }) => (
     <div className="w-full max-w-md bg-orange-300 rounded-lg border-4 border-black p-3 shadow-neo mb-4 flex items-center justify-center gap-2  bg-pale-yellow card">
@@ -231,48 +252,48 @@ function App() {
     }
   };
 
-if (showSocialPage) {
-  return (
-    <div className="min-h-screen bg-pale-violet flex flex-col items-center p-4">
-      <div className="w-full max-w-md flex flex-col items-center gap-4">
-        <div className="w-full flex items-center justify-center mb-4">
-          <h2 className="text-2xl font-bold">Friends' Photos</h2>
-        </div>
+  if (showSocialPage) {
+    return (
+      <div className="min-h-screen bg-pale-violet flex flex-col items-center p-4">
+        <div className="w-full max-w-md flex flex-col items-center gap-4">
+          <div className="w-full flex items-center justify-center mb-4">
+            <h2 className="text-2xl font-bold">Friends' Photos</h2>
+          </div>
 
-        <div className="w-full bg-white border-4 border-black rounded-lg p-4 mb-4">
-          <h3 className="text-xl font-bold mb-2">Today's Prompt:</h3>
-          <p className="text-lg">{input_prompt}</p>
-        </div>
+          <div className="w-full bg-white border-4 border-black rounded-lg p-4 mb-4">
+            <h3 className="text-xl font-bold mb-2">Today's Prompt:</h3>
+            <p className="text-lg">{input_prompt}</p>
+          </div>
 
-        <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[60vh] p-2">
-          {friendsData.map(friend => (
-            <div key={friend.id} className="bg-green-300 border-4 border-black rounded-lg p-4 shadow-neo">
-                   <div class="ribbon">
+          <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[60vh] p-2">
+            {getSortedFriends().map(friend => (
+              <div key={friend.id} className="bg-green-300 border-4 border-black rounded-lg p-4 shadow-neo">
+                <div className="ribbon">
                   <span>SO COOL</span>
                 </div>
-              <div className="flex flex-col">
-                <div className="w-full mb-3">
-                  <img
-                    src={friend.image}
-                    alt={`${friend.name}'s photo`}
-                    className="w-full h-48 object-cover rounded-lg border-2 border-black"
-                  />
-                </div>
-                {/* Replace this div and its contents */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-lg">{friend.name}</span>
-                    <span className="text-sm text-gray-600">• {friend.timestamp}</span>
+                <div className="flex flex-col">
+                  <div className="w-full mb-3">
+                    <img
+                      src={friend.image}
+                      alt={`${friend.name}'s photo`}
+                      className="w-full h-48 object-cover rounded-lg border-2 border-black"
+                    />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Trophy className="w-5 h-5" />
-                    <span className="font-bold text-lg">{friend.streak}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-lg">{friend.name}</span>
+                      <span className="text-sm text-gray-600">• {friend.timestamp}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-5 h-5" />
+                      <span className="font-bold text-lg">{friend.streak}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+
 
     <div style={{position: "fixed", bottom: "0", width: "100%"}} className='bg-orange p-4'>
         <button
@@ -284,10 +305,12 @@ if (showSocialPage) {
         </button>
   </div>
         
+
+       
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
   
   if (showSuccessPage) {
     return (

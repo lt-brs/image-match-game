@@ -8,7 +8,46 @@ import image2 from './pics/image2.png';
 import image3 from './pics/image3.png';
 import image4 from './pics/image4.png';
 
+
 const input_prompt = "Take a photo of a human";
+
+
+function  generateSmartContrasts(originalPrompt,  numContrasts  =  3)  {
+  //  Simple  word  splitting  and  analysis
+  const  words  =  originalPrompt.toLowerCase().split(' ');
+
+  //  Try  to  identify  key  objects  and  actions
+  const  contrasts  =  [];
+
+  //  If  prompt  contains  "a"  or  "an",  it's  likely  describing  an  object
+  if  (words.includes('a')  ||  words.includes('an'))  {
+       contrasts.push(`not ${originalPrompt}`);
+       contrasts.push(`a different kind of ${words[words.length-1]}`);
+       contrasts.push(`something completely different than ${words[words.length-1]}`);
+   }
+
+  //  If  prompt  contains  action  words  (ing)
+  if  (originalPrompt.includes('ing'))  {
+       contrasts.push(`${originalPrompt.replace('ing',  'ing  not')}`);
+       contrasts.push(`a static scene without action`);
+   }
+
+  //  If  prompt  mentions  a  place
+  const  places  =  ['park',  'house',  'beach',  'room',  'street'];
+  const  foundPlace  =  words.find(word  =>  places.includes(word));
+  if  (foundPlace)  {
+       contrasts.push(`the same but not in a ${foundPlace}`);
+       contrasts.push(`an empty ${foundPlace}`);
+   }
+
+  //  Take  only  requested  number  of  contrasts
+   contrasts.splice(numContrasts);
+
+  //  Return  original  +  contrasts
+  return [originalPrompt,  ...contrasts];
+}
+
+
 
 function formatPromptForCLIP(prompt) {
   const cleanedPrompt = prompt
@@ -41,13 +80,24 @@ const mockModelProcess = async (base64Image) => {
   try {
     const model = await initializeCLIPModel();
     const formattedPrompt = formatPromptForCLIP(input_prompt);
+    
+    const prompts = generateSmartContrasts(formattedPrompt);
+    //console.log(prompts)
+
     const result = await classifyImage(model, base64Image,
+      //prompts
+     
       [
-      formattedPrompt,
-      "a photo of a bird",
-      "a photo of a plane",
-      "a photo of a cat"
-    ]);
+        formattedPrompt,
+        "a photo of an animal",
+        "a photo of foood",
+        "a photo of a chair",
+        "a photo of a vegetable",
+      ]
+      
+    );
+
+    //const result = await checkImageWithSmartContrasts(base64Image,  input_prompt)
     
     const bestClass = getBestClass(result);
     console.log(result)

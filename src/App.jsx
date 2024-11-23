@@ -247,6 +247,9 @@ if (showSocialPage) {
         <div className="w-full flex flex-col gap-4 overflow-y-auto max-h-[60vh] p-2">
           {friendsData.map(friend => (
             <div key={friend.id} className="bg-green-300 border-4 border-black rounded-lg p-4 shadow-neo">
+                   <div class="ribbon">
+                  <span>SO COOL</span>
+                </div>
               <div className="flex flex-col">
                 <div className="w-full mb-3">
                   <img
@@ -329,7 +332,7 @@ if (showSocialPage) {
           style={{ transform: 'skewY(-2.5deg)' }}
         >
           <h1 className="title p-3 md:p-4 text-center text-4xl font-bold">
-            GOOZY
+            SPOTON
           </h1>
         </div>
 

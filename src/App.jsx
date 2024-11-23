@@ -9,7 +9,7 @@ import image3 from './pics/image3.png';
 import image4 from './pics/image4.png';
 
 
-const input_prompt = "Take a photo of a human";
+const input_prompt = "Take a photo of a your pretty face";
 
 
 function  generateSmartContrasts(originalPrompt,  numContrasts  =  3)  {
@@ -96,7 +96,6 @@ const mockModelProcess = async (base64Image) => {
         'a photo of a vehicule',
         'a photo of art',
         'a photo of a sport',
-        'a photo of technology',
       ]
       
     );
